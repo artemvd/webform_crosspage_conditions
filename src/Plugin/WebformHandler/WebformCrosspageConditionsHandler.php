@@ -93,6 +93,7 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
       $applyCondition = [];
       // loop through all the conditions for the state.
       foreach ($conditions as $condition => $value) {
+        $conditionalFieldValue = FALSE;
         if (!is_numeric($condition)) {
           // there is only one condition.
           $conditionalField = $condition;
@@ -104,7 +105,9 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
           $conditionalFieldValue = $value[$fieldNames[0]];
         } else {
           // this is the operator 'or' or 'and'.
-          $applyCondition[] = $value;
+          if (!empty($applyCondition)) {
+            $applyCondition[] = $value;
+          }
           continue;
         }
         $matches = [];
@@ -114,9 +117,12 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
           $field_name = $matches[1];
           // check if this field is on this page.
           if (!in_array($field_name, array_keys($page_elements))) {
+            if (!$conditionalFieldValue) {
+              $conditionalFieldValue = $value[$field_name];
+            }
             // check the data for the dependent field.
             $dependentValue = $webform_submission->getData($field_name);
-            // for now only 2 conditions are supported "value", "checked" and "unchecked"
+            // for now only 2 conditions are supported "value" and "checked"
             if (isset($conditionalFieldValue['value'])) {
               $checkValue = $conditionalFieldValue['value'];
             } elseif ($conditionalFieldValue['checked']) {
@@ -147,12 +153,17 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
    * @return mixed
    */
   private function calculateConditions($results) {
+
     if (count($results) == 1) {
       return array_shift($results);
     }
-    $eval = implode(" ", $results);
-	// find better way to evaluate several conditions
+    if (!in_array('or', $results)) {
+      $eval = implode(" and ", $results);
+    } else {
+      $eval = implode(" ", $results);
+    }
     return eval("return $eval;");
+    //return $eval;
   }
 
   /**
@@ -177,7 +188,7 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
         $element['#required'] = FALSE;
         break;
       case 'disabled':
-        $element['##attributes']['disabled'] = TRUE;
+        $element['#attributes']['disabled'] = TRUE;
         break;
     }
   }
@@ -189,14 +200,13 @@ class WebformCrosspageConditionsHandler extends WebformHandlerBase {
    * @param bool $required
    * @internal param $element
    */
-  private function setRecursivelyRequired($elements, $required = FALSE) {
+  private function setRecursivelyRequired(&$elements, $required = FALSE) {
     foreach ($elements as $key => $element) {
       if (Element::property($key) || !is_array($element)) {
         continue;
       }
-      $element['#required'] = $required;
+      $elements[$key]['#required'] = $required;
       $this->setRecursivelyRequired($elements[$key], $required);
     }
   }
-
 }
