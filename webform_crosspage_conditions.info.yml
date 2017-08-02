@@ -1,7 +1,7 @@
-name: Webform Crosspage Condtiotions
+name: Webform Crosspage Conditions
 type: module
 description: Adds custom functionality to webform
 core: 8.x
-package: XI
+package: Webform
 dependencies:
   - webform
