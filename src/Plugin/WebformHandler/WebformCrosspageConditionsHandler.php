@@ -5,7 +5,7 @@ namespace Drupal\webform_crosspage_conditions\Plugin\WebformHandler;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\webform\Utility\WebformElementHelper;
-use Drupal\webform\WebformHandlerBase;
+use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
 
 /**
