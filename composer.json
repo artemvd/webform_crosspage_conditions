@@ -1,0 +1,21 @@
+{
+  "name": "webform_crosspage_conditions",
+  "type": "drupal-module",
+  "description": "This module provides the webform handler for evaluation of states from other webform pages.",
+  "license": "GPL-2.0+",
+  "homepage": "https://www.1xinternet.de",
+  "authors": [
+    {
+      "name": "Artem Dmitriiev (a.dmitriiev)",
+      "homepage": "https://www.drupal.org/u/a.dmitriiev",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/artemvd/webform_crosspage_conditions/issues",
+    "source": "https://github.com/artemvd/webform_crosspage_conditions"
+  },
+  "require": {
+    "drupal/webform": "~5.0.0"
+  }
+}
